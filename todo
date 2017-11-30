@@ -1,0 +1,11 @@
+    - Move input is an array and a number, response is an x and an y.
+
+    - Generate boards and save to file (preferably JSON?)
+
+    - Bruteforce: pick every possible way and register options.
+
+    - Save to dictonary. Key = hash of boardstate, value is list of tuples (x and y)
+
+    - Select all possible moves and choose randomly.
+
+    - Return x and y
