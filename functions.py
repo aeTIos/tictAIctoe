@@ -1,4 +1,5 @@
 import hashlib
+import json
 
 #Ubersimple hashing function
 def hash(array):
@@ -14,4 +15,14 @@ def getvalidmoves(gamestate):
                 coord = (y,x)
                 availablemoves.append(coord)
     return availablemoves
+
+def loadjson(filename):
+    with open(filename, 'r') as f:
+        jsonfile = json.load(f)
+        return jsonfile
+
+def savejson(filename, dictionary):
+    with open(filename, 'w') as f:
+        json.dump(dictionary, f)
+    
 
