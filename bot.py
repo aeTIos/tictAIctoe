@@ -9,8 +9,7 @@ def generate_boards(size):
 
     get_states(size, deepcopy(array), boards, 1, 0)
 
-    print(f'\n\n\n{boards}')
-    print(len(boards))
+    return boards
 
 
 def win(array):
@@ -84,5 +83,3 @@ def get_states(size, array, boards, player, iteration):
 #             [2,1,1]]
 
 #print(win(testarray))
-
-generate_boards(3)
