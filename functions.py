@@ -95,9 +95,10 @@ def get_gamestates(size, gamestate, boards, player, iteration):
 
 
 # fetch array with move statistics from database
-def fetch_moves(db, hash):
-    pass # return array [[y,x],[y,x]...[100, 200...]]
-
+def fetch_moves(database, boardhash):
+    with open(database, 'r') as f:
+        workfile = json.load(f)
+        return workfile.get(boardhash)
 
 # generate a move based on the possible moves
 def generate_move(moves):
@@ -105,7 +106,7 @@ def generate_move(moves):
 
 
 #update a board array with a move
-def update_board(board, move)
+def update_board(board, move):
     pass # return new board
 
 # update the database for played moves with new values by amount
