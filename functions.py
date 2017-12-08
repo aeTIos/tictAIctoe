@@ -106,7 +106,7 @@ def generate_move(moves):
 
 
 #update a board array with a move
-def update_board(board, move)
+def update_board(board, move):
     pass # return new board
 
 # update the database for played moves with new values by amount
