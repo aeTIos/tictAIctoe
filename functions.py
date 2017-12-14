@@ -1,7 +1,7 @@
 import hashlib
 import json
 from copy import deepcopy
-
+import random
 
 # Generate sha256 hash of gamestate
 def gamestate_hash(array):
@@ -18,8 +18,6 @@ def get_valid_moves(gamestate):
                 coord = (y, x)
                 availablemoves.append(coord)
     return availablemoves
-
-
 
 
 
@@ -101,8 +99,24 @@ def fetch_moves(database, boardhash):
         return workfile.get(boardhash)
 
 # generate a move based on the possible moves
-def generate_move(moves):
-    pass # return a tuple (y, x)
+def generate_move(inputarray):
+    numberarray = inputarray[-1]
+    combined_number = 0
+    encounterzero = []
+
+    for i in range(0,len(numberarray)):
+        if numberarray[i] is 0:
+            encounterzero.append(i)
+        combined_number += numberarray[i]
+
+    randomnumber = random.randrange(1, combined_number)
+    calcnumber = 0
+    for i in range(0, len(numberarray)):
+        if i not in encounterzero:
+            calcnumber += numberarray[i]
+            if randomnumber <= calcnumber:
+                retarray = inputarray[i]
+                return (retarray[0], retarray[1])
 
 
 #update a board array with a move
