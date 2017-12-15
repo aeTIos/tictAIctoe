@@ -10,23 +10,21 @@ def gamestate_hash(array):
 
 
 # return array with all possible moves
-def get_valid_moves(gamestate):
+def init_valid_moves(gamestate):
     availablemoves = []
     for y in range(len(gamestate)):
         for x in range(len(gamestate[y])):
             if gamestate[y][x] == 0:
-                coord = (y, x)
+                coord = [(y, x), 100]
                 availablemoves.append(coord)
     return availablemoves
-
-
 
 
 # generate a dictionary {HASH: moves} based on an array with gamestates
 def generate_database(states):
     dictionary = {}
     for state in states:
-        dictionary.update({gamestate_hash(state): get_valid_moves(state)})
+        dictionary.update({gamestate_hash(state): init_valid_moves(state)})
     return dictionary
 
 
@@ -69,16 +67,21 @@ def save_json(filename, dictionary):
         json.dump(dictionary, f)
 
 
-# generate all games on a size x size board
+#
 def generate_boards(size):
+    """
+    Generate all games on a size x size board
+    """
     array = [[0 for i in range(size)] for i in range(0, size)]
     boards = [deepcopy(array)]
     get_gamestates(size, deepcopy(array), boards, 1, 0)
     return boards
 
 
-# Generate all possible boards based on an initial state
 def get_gamestates(size, gamestate, boards, player, iteration):
+    """
+    Generate all possible boards based on an initial state
+    """
     winyn = game_end(gamestate)
     if winyn is False:
         for i in range(0, size):
@@ -91,12 +94,12 @@ def get_gamestates(size, gamestate, boards, player, iteration):
                         get_gamestates(size, deepcopy(tempboard), boards, player, iteration + 1)
 
 
-
 # fetch array with move statistics from database
 def fetch_moves(database, boardhash):
     with open(database, 'r') as f:
         workfile = json.load(f)
         return workfile.get(boardhash)
+
 
 # generate a move based on the possible moves
 def generate_move(inputarray):
@@ -116,13 +119,27 @@ def generate_move(inputarray):
             calcnumber += numberarray[i]
             if randomnumber <= calcnumber:
                 retarray = inputarray[i]
-                return (retarray[0], retarray[1])
+                return retarray[0], retarray[1]
 
 
-#update a board array with a move
-def update_board(board, move):
-    pass # return new board
+# update a board array with a move
+def update_board(gamestate, move, player):
+    gamestate[move[0]][move[1]] = player
+    return gamestate
 
-# update the database for played moves with new values by amount
+
+# update the move counters with amount
 def update_database(moves, database, amount):
-    pass
+    for boardhash in moves:
+        avail_moves = database[boardhash]
+        # find the move that we played
+        played_move = moves[boardhash]
+        # convert this tuple to an array
+        played_move = [x for x in played_move]
+        print(played_move)
+        # match this move with the available moves to see which we need to update
+        for i in avail_moves:
+            print(i)
+            if i[0] == played_move:
+                i[1] += amount
+        return
