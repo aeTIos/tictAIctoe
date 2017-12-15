@@ -7,8 +7,9 @@ import bot as bot2
 import random
 from copy import deepcopy
 
-ROUNDSTOBEPLAYED = 1000
+ROUNDSTOBEPLAYED = 1500
 
+showgame = False
 
 def print_board(board):
     print(' ' + str(board[0][0]) + ' | ' + str(board[0][1]) + ' | ' + str(board[0][2]))
@@ -130,7 +131,7 @@ def play_game(curar, startplr):
         # print(f"[FWK] move is correct: {move[0]}")
         if move[0] is True:
             curar = insert_move(move[1], move[2], move[3])
-            # print_board(curar)
+            if showgame: print_board(curar)
         else:
             curpl = move[3]  # Wissel de speler om, omdat de speler hier de fout in gaat, de ander wint.
             if curpl == 2:
@@ -161,6 +162,7 @@ def main():
     p2wins = 0
     # Game loop
     while games_played < ROUNDSTOBEPLAYED:
+        print(f'game: {games_played}')
         current_array = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]  # game_init(default_array)
         winner = play_game(current_array, current_player)
         #print(f"[FWK] {winner}")
