@@ -162,9 +162,12 @@ def update_database(moves, database, amount):
 
                 if avail_moves[-1][i] <= 0:
                     avail_moves[-1][i] = 0
+                if avail_moves[-1][i] > 2250:
+                    avail_moves[-1][i] = 2250
         # print('<UPD_DB> '+str(avail_moves))
 
     return
+
 
 # invert the board because we're dorks
 def invert_board(board):
