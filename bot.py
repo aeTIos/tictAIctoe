@@ -17,7 +17,7 @@ with open('/tmp/freefields_2', 'w+') as f:
 def move(array, speler):
     DRAWADJUST = 5
     WINADJUST = 10
-    LOSEADJUST = -3
+    LOSEADJUST = -10
 
 
     board = array
