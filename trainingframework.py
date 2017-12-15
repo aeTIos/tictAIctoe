@@ -2,11 +2,12 @@
 Aanleveren ([[0,0,0],[0,0,0],[0,0,0]], 1|2)
 """
 
-import stupidbot as bot1
-import retardbot as bot2
+import bot as bot1
+import bot as bot2
 import random
+from copy import deepcopy
 
-ROUNDSTOBEPLAYED = 1000
+ROUNDSTOBEPLAYED = 10000
 
 
 def print_board(board):
@@ -31,11 +32,13 @@ def make_move(board, ap):
     move = (-1, -1)
     try:  # KWARGS gebruikt. Voor betere uitwisselbaarheid van bots.
         if ap == 1:
-            move = bot1.move(array=board, speler=ap)
+            move = bot1.move(array=deepcopy(board), speler=ap)
+            # print(f'[FWK] bot1 move: {move}')
         if ap == 2:
-            move = bot2.move(array=board, speler=ap)
+            move = bot2.move(array=deepcopy(board), speler=ap)
+            # print(f'[FWK] bot2 move: {move}')
     except ValueError:
-        print("make_move failed")
+        # print("[FWK] make_move failed")
         move = (None, None)
     try:
         if move[0] < 0 or move[0] > 2:
@@ -119,6 +122,7 @@ def check_move(move, board, speler):
             correct = False
     except (ValueError, TypeError):  # TypeError vangt de (None, None) moves.
         correct = False
+    # print(f'[FWK] board = {board}')
     return [correct, move, board, speler]
 
 
@@ -140,9 +144,10 @@ def play_game(curar, startplr):
     while game_collapsed is False:
         current_player = flip_player(current_player)
         move = check_move(make_move(curar, current_player), curar, current_player)
+        # print(f"[FWK] move is correct: {move[0]}")
         if move[0] is True:
             curar = insert_move(move[1], move[2], move[3])
-            # print_board(curar)
+            #print_board(curar)
         else:
             curpl = move[3]  # Wissel de speler om, omdat de speler hier de fout in gaat, de ander wint.
             if curpl == 2:
@@ -157,6 +162,8 @@ def play_game(curar, startplr):
     if winner == -1:
         raise ValueError("Play Game failed")
     else:
+        # print(f'[FWK] winner = {winner}\n[FWK] current board:')
+        #print_board(curar)
         return winner
 
 
@@ -166,15 +173,15 @@ def main():
     games_won = (0, 0)
 
     current_player = choose_starting_player()
-    # print("Bot1 = {}\nBot2 = {}".format(str(bot1.__file__).split('/')[-1], str(bot2.__file__).split('/')[-1]))
+    #print("[FWK] Bot1 = {}\nBot2 = {}".format(str(bot1.__file__).split('/')[-1], str(bot2.__file__).split('/')[-1]))
     p1wins = 0
     p2wins = 0
     # Game loop
     while games_played < ROUNDSTOBEPLAYED:
         current_array = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]  # game_init(default_array)
         winner = play_game(current_array, current_player)
-        # print(winner)
-        # print("speler {0} heeft gewonnen".format(winner))
+        #print(f"[FWK] {winner}")
+        #print("[FWK] speler {0} heeft gewonnen".format(winner))
         games_played = games_played + 1
         if winner == 1:
             p1wins = p1wins + 1
