@@ -7,7 +7,7 @@ import bot as bot2
 import random
 from copy import deepcopy
 
-ROUNDSTOBEPLAYED = 10000
+ROUNDSTOBEPLAYED = 1000
 
 
 def print_board(board):
@@ -63,55 +63,38 @@ def flip_player(ap):
 
 
 def check_winner(array):
-    if array[0][0] == 1 and array[0][1] == 1 and array[0][2] == 1:
-        return 1
-    if array[0][0] == 1 and array[1][0] == 1 and array[2][0] == 1:
-        return 1
-    if array[0][1] == 1 and array[1][1] == 1 and array[2][1] == 1:
-        return 1
-    if array[0][2] == 1 and array[1][2] == 1 and array[2][2] == 1:
-        return 1
-    if array[1][0] == 1 and array[1][1] == 1 and array[1][2] == 1:
-        return 1
-    if array[2][0] == 1 and array[2][1] == 1 and array[2][2] == 1:
-        return 1
-    if array[0][2] == 1 and array[1][1] == 1 and array[2][0] == 1:
-        return 1
-    if array[0][0] == 1 and array[1][1] == 1 and array[2][2] == 1:
-        return 1
+    length = len(array)
+    vals = [1, 2]
+    for player in vals:
+        diag1 = 0
+        diag2 = 0
+        for i in range(0, length):
+            dir1 = 0
+            dir2 = 0
+            for j in range(0, length):
+                if array[j][i] == player:
+                    dir1 += 1
+                if array[i][j] == player:
+                    dir2 += 1
+                if dir1 == 3 or dir2 == 3:
+                    return player
+            if array[i][i] == player:
+                diag1 += 1
+            if array[i][length - 1 - i] == player:
+                diag2 += 1
+            if diag1 == 3 or diag2 == 3:
+                return player
+    #detect a draw
+    count = 0
+    for x in range(0, length):
+        for y in range(0, length):
+            if array[y][x] in [1, 2]:
+                count += 1
+    if count == 9:
+        return 0
 
-    if array[0][0] == 2 and array[0][1] == 2 and array[0][2] == 2:
-        return 2
-    if array[0][0] == 2 and array[1][0] == 2 and array[2][0] == 2:
-        return 2
-    if array[0][1] == 2 and array[1][1] == 2 and array[2][1] == 2:
-        return 2
-    if array[0][2] == 2 and array[1][2] == 2 and array[2][2] == 2:
-        return 2
-    if array[1][0] == 2 and array[1][1] == 2 and array[1][2] == 2:
-        return 2
-    if array[2][0] == 2 and array[2][1] == 2 and array[2][2] == 2:
-        return 2
-    if array[0][2] == 2 and array[1][1] == 2 and array[2][0] == 2:
-        return 2
-    if array[0][0] == 2 and array[1][1] == 2 and array[2][2] == 2:
-        return 2
+    return -1
 
-    zerosleft = False
-
-    for i in array:
-        for number in i:
-            if number == 0:
-                zerosleft = True
-        if zerosleft == False:
-            return 0
-
-    # winner is -1, 0, 1, 2
-    # -1 Undecided
-    # 0 Draw
-    # 1, 2 winners
-    winner = -1
-    return winner
 
 
 def check_move(move, board, speler):
@@ -147,7 +130,7 @@ def play_game(curar, startplr):
         # print(f"[FWK] move is correct: {move[0]}")
         if move[0] is True:
             curar = insert_move(move[1], move[2], move[3])
-            #print_board(curar)
+            # print_board(curar)
         else:
             curpl = move[3]  # Wissel de speler om, omdat de speler hier de fout in gaat, de ander wint.
             if curpl == 2:
@@ -163,7 +146,7 @@ def play_game(curar, startplr):
         raise ValueError("Play Game failed")
     else:
         # print(f'[FWK] winner = {winner}\n[FWK] current board:')
-        #print_board(curar)
+
         return winner
 
 
