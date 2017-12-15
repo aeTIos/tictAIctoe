@@ -11,5 +11,6 @@ Requirements:
 Python 3.6
 
 **How it works**
+
 The basic concept of the workings of the bot are explained in [this video](https://www.youtube.com/watch?v=R9c-_neaxeU) by the excellent Matt Parker. We translated the concept to code and in its current state it is a pretty accurate reflection of the Menace machine.
 
