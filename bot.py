@@ -4,41 +4,43 @@ from copy import deepcopy
 #initialise
 
 helpineedtoinitthis = {}
-functions.save_json(f'/tmp/moves_1', helpineedtoinitthis)
-functions.save_json(f'/tmp/moves_2', helpineedtoinitthis)
-with open('/tmp/freefields_1', 'w+') as f:
-    f.write('15')
+functions.save_json(f'/tmp/moves', helpineedtoinitthis)
 
-with open('/tmp/freefields_2', 'w+') as f:
-    f.write('15')
+helpineedtoinitthis = {'freefields' : 15}
 
+functions.save_json('/tmp/freefields', helpineedtoinitthis)
 
 
 def move(array, speler):
-    DRAWADJUST = 5
-    WINADJUST = 10
-    LOSEADJUST = -10
+    DRAWADJUST = 100
+    WINADJUST = 1000000000
+    LOSEADJUST = -1
 
 
     board = array
     player = speler
 
     # init moves during game
-    movesduringgame = functions.load_json(f'/tmp/moves_{player}')
+    movesduringgame = functions.load_json(f'/tmp/moves')
 
     big_db = functions.load_json('db.json')
 
     freefields = functions.free_fields(deepcopy(board))
 
     # did we lose when the other side moved?
-    with open(f'/tmp/freefields_{player}') as f:
-        count = int(f.read())
-        # print(f'SAVED FREE FIELDS: {count}')
-        if freefields > count:
-            #we lost :(
-            adjust = LOSEADJUST
-            functions.update_database(movesduringgame, big_db, adjust)
-            functions.save_json('db.json', big_db)
+    ff_json = functions.load_json(f'/tmp/freefields')
+
+    count = ff_json['freefields']
+   # print(f'SAVED FREE FIELDS: {count}')
+   # print(f'CURRENT FREE FIELDS: {freefields}') 
+    
+    if freefields > count:
+        #we lost :(
+        adjust = LOSEADJUST
+        functions.update_database(movesduringgame, big_db, adjust)
+        functions.save_json('db.json', big_db)
+        movesduringgame = {}
+
 
 
     boardhash = functions.gamestate_hash(board)
@@ -90,8 +92,10 @@ def move(array, speler):
 
 
     # detect if we draw or lose next turn
-    freefields = functions.free_fields(board)
-    if freefields == 1:
+    free = functions.free_fields(board)
+    
+    freefields = {'freefields': free}
+    if free == 1:
 
         emp_field = [-1,-1]
         for y in range(len(board)):
@@ -109,21 +113,13 @@ def move(array, speler):
         functions.update_database(movesduringgame, big_db, adjust)
         functions.save_json('db.json', big_db)
         movesduringgame = {}
-        with open(f'/tmp/freefields_{player}', 'w+') as f:
-            f.write('15')
-    else:
-        with open(f'/tmp/freefields_{player}', 'w+') as f:
-            f.write(str(freefields))
-
-
-
-
-
-
+        freefields={'freefields': 15}  
+    
+    functions.save_json(f'/tmp/freefields', freefields)
 
 
     # write movesduringgame out to file
-    functions.save_json(f'/tmp/moves_{player}', movesduringgame)
+    functions.save_json(f'/tmp/moves', movesduringgame)
 
     # # print('<BOT> newmv  '+str(newmove))
 
